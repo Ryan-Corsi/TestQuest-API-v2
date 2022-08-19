@@ -18,9 +18,16 @@ class detProvas(admin.ModelAdmin):
     list_display_links = ('id',)
     search_fields = ('nome',)
     list_per_page = 10
+    
+    
+class detGabaritoIA(admin.ModelAdmin):
+    list_display = ('id_gabarito', 'resultados', 'gabarito_img')
+    list_display_links = ('id_gabarito',)
+    list_per_page = 10
 
 
 
 admin.site.register(Processo, detProcessos)
 admin.site.register(Pessoa, detPessoas)
 admin.site.register(Prova, detProvas)
+admin.site.register(GabaritoIA, detGabaritoIA)

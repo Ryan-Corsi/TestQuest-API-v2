@@ -1,3 +1,4 @@
+import re
 from turtle import width
 from django.shortcuts import render
 from .models import *
@@ -115,19 +116,61 @@ class GabaritoGenerator(APIView):
         #p.drawString(50, 800, "Nome:  Ryan Gabriel Silva Corsi")
         
         
-        formato = Image.open(r"C:\Users\COY2CA\Desktop\YYYYY.png")
-        p.drawInlineImage(formato, 0, 0) 
-        p.drawString(132, 112, "Milena Fernandes da Silva")
+        formato = Image.open(r"C:\Users\COY2CA\Desktop\yyyyyv2_LI.jpg")
+        # formato = Image.open(r"C:\Users\COY2CA\Desktop\YYYYY.png")
+        # formato = Image.open(r"C:\Users\COY2CA\Desktop\gb30M.png")
+        
+        
+        pessoas = ''
+        
+        # http://127.0.0.1:8000/gabaritos?processo=1
+        if 'processo' in request.GET:
+            processo = request.GET['processo']
+            pessoas = Pessoa.objects.filter(idProcessoFK=processo)
+        else:
+            pessoas = Pessoa.objects.all()
 
-        imagem_qrcode = qrcode.make(1)
+        id = 0
         
-        p.drawInlineImage( imagem_qrcode, 475, 37, width=int(40), height=int(40)) 
+        for pessoa in pessoas: 
+            p.drawInlineImage(formato, 0, 0) 
+            p.drawString(50, 762, str(processo))
+            p.drawString(132, 112, str(pessoa))
+
+            imagem_qrcode = qrcode.make(id)
+            
+            id += 1
         
-        p.showPage()
+            p.drawInlineImage(imagem_qrcode, 475, 37, width=int(40), height=int(40)) 
+        
+            p.showPage()
         p.save()
         
         return response
 
+class GabaritoIAAPIView(APIView):
+    def get(self, request, pk=""):
+        pessoas = GabaritoIA.objects.all()
+        serializer = GabaritoIASerializer(pessoas, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):      
+        serializer = GabaritoIASerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()        
+        return Response({"msg": "GabaritoIA inserido com sucesso..."})
+
+    def put(self, request, pk=''):
+        pessoas = GabaritoIA.objects.get(id=pk)
+        serializer = GabaritoIASerializer(pessoas, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, pk=''):        
+        pessoas = GabaritoIA.objects.get(id=pk)       
+        pessoas.delete()
+        return Response({"msg": "GabaritoIA deletada..."})
 
 
 """

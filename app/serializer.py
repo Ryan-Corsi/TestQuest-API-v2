@@ -29,3 +29,9 @@ class PessoasGETSerializer(serializers.ModelSerializer):
         many = True
         model = Pessoa
         fields = '__all__'
+        
+class GabaritoIASerializer(serializers.ModelSerializer):
+    class Meta:
+        many = True
+        model = GabaritoIA
+        fields = '__all__'

@@ -1,3 +1,4 @@
+from uuid import uuid4
 from django.db import models
 
 # Create your models here.
@@ -34,5 +35,12 @@ class Pessoa(models.Model):
     def __str__(self):
         return self.nome
 
-    
+
+def upload_gabarito_img(instance, filename):
+    return f"{instance.id_gabarito}-{filename}"
+
+class GabaritoIA(models.Model):
+    id_gabarito = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    resultados = models.CharField(max_length=200)
+    gabarito_img = models.ImageField(upload_to=upload_gabarito_img, null=True)
         
